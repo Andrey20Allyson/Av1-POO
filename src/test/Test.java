@@ -17,15 +17,15 @@ public class Test {
                 var carb = Math.random() * 100;
                 var humi = Math.random() * 100;
 
-                localStorage.createRegisty((float) temp, (float) carb, (float) humi, Calendar.getInstance().getTime());
+                localStorage.createRegistry((float) temp, (float) carb, (float) humi, Calendar.getInstance().getTime());
             }
         });
 
         test("sort by temperature", 5f, () -> {
             EnvironmentStorage storage = new EnvironmentStorage();
 
-            storage.createRegisty(10, 0, 0, null);
-            storage.createRegisty(5, 0, 0, null);
+            storage.createRegistry(10, 0, 0, null);
+            storage.createRegistry(5, 0, 0, null);
 
             storage.sortByTemperature();
 
@@ -35,8 +35,8 @@ public class Test {
         test("sort by carbon dioxide", 5f, () -> {
             EnvironmentStorage storage = new EnvironmentStorage();
 
-            storage.createRegisty(0, 10, 0, null);
-            storage.createRegisty(0, 5, 0, null);
+            storage.createRegistry(0, 10, 0, null);
+            storage.createRegistry(0, 5, 0, null);
 
             storage.sortByCarbonDioxideQnt();
 
@@ -46,9 +46,9 @@ public class Test {
         test("sort by humidity", 50f, () -> {
             EnvironmentStorage storage = new EnvironmentStorage();
 
-            storage.createRegisty(0, 0, 10, null);
-            storage.createRegisty(0, 0, 50, null);
-            storage.createRegisty(0, 0, 30, null);
+            storage.createRegistry(0, 0, 10, null);
+            storage.createRegistry(0, 0, 50, null);
+            storage.createRegistry(0, 0, 30, null);
 
             storage.sortByHumidity();
 

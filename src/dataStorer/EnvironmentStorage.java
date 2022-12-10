@@ -122,7 +122,7 @@ public class EnvironmentStorage {
      * @param time - quando a coleta foi feita.
      * @return um novo registro.
      */
-    public EnvironmentRegistry createRegisty(float temperature, float carbonDioxideQnt, float humidity, Date time) {
+    public EnvironmentRegistry createRegistry(float temperature, float carbonDioxideQnt, float humidity, Date time) {
         EnvironmentRegistry registry = new EnvironmentRegistry(temperature, carbonDioxideQnt, humidity, time);
 
         this.push(registry);
