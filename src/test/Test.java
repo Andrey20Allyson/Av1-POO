@@ -4,32 +4,102 @@ import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 
+import dataStorer.EnvironmentRegistry;
 import dataStorer.EnvironmentStorage;
 
 public class Test {
     public static void main(String[] args) {
-        EnvironmentStorage storage = new EnvironmentStorage();
+        EnvironmentStorage localStorage = new EnvironmentStorage();
 
         test("data creation", () ->  {
             for (int i = 0; i < 48; i++) {
-                var temp = Math.random() * 100000;
-                var carb = Math.random() * 10000;
-                var humi = Math.random() * 1000;
+                var temp = Math.random() * 100;
+                var carb = Math.random() * 100;
+                var humi = Math.random() * 100;
 
-                storage.createRegisty((float) temp, (float) carb, (float) humi, Calendar.getInstance().getTime());
+                localStorage.createRegisty((float) temp, (float) carb, (float) humi, Calendar.getInstance().getTime());
             }
         });
 
-        test("sort by temperature", () -> {
+        test("sort by temperature", 5f, () -> {
+            EnvironmentStorage storage = new EnvironmentStorage();
+
+            storage.createRegisty(10, 0, 0, null);
+            storage.createRegisty(5, 0, 0, null);
+
             storage.sortByTemperature();
+
+            return storage.get(0).temperature;
         });
 
-        test("sort by carbon dioxide", () -> {
+        test("sort by carbon dioxide", 5f, () -> {
+            EnvironmentStorage storage = new EnvironmentStorage();
+
+            storage.createRegisty(0, 10, 0, null);
+            storage.createRegisty(0, 5, 0, null);
+
             storage.sortByCarbonDioxideQnt();
+
+            return storage.get(0).carbonDioxideQnt;
         });
 
-        test("get table", () -> {
-            System.out.println(storage.toString());
+        test("sort by humidity", 50f, () -> {
+            EnvironmentStorage storage = new EnvironmentStorage();
+
+            storage.createRegisty(0, 0, 10, null);
+            storage.createRegisty(0, 0, 50, null);
+            storage.createRegisty(0, 0, 30, null);
+
+            storage.sortByHumidity();
+
+            return storage.get(0).humidity;
+        });
+
+        test("push() shold put item in the last index", true, () -> {
+            EnvironmentStorage storage = new EnvironmentStorage();
+
+            var registry0 = new EnvironmentRegistry(0, 0, 10, null);
+            var registry1 = new EnvironmentRegistry(0, 0, 50, null);
+            var registry2 = new EnvironmentRegistry(0, 0, 30, null);
+
+            storage.push(registry0);
+            storage.push(registry1);
+            storage.push(registry2);
+
+            return storage.get(-1) == registry2;
+        });
+
+        test("push() shold return the index of the inserted item", 1, () -> {
+            EnvironmentStorage storage = new EnvironmentStorage();
+
+            var registry0 = new EnvironmentRegistry(0, 0, 10, null);
+            var registry1 = new EnvironmentRegistry(0, 0, 50, null);
+            int index;
+
+            storage.push(registry0);
+            index = storage.push(registry1);
+
+            return index;
+        });
+
+        test("pop() shold remove the last item of the list", true, () -> {
+            EnvironmentStorage storage = new EnvironmentStorage();
+
+            var registry0 = new EnvironmentRegistry(0, 0, 10, null);
+            var registry1 = new EnvironmentRegistry(0, 0, 50, null);
+            var registry2 = new EnvironmentRegistry(0, 0, 30, null);
+
+            storage.push(registry0);
+            storage.push(registry1);
+            storage.push(registry2);
+
+            var removedRegistry = storage.pop();
+
+            return removedRegistry == registry2;
+        });
+
+        test("test toString", () -> {
+            localStorage.toString();
         });
     }
     
@@ -61,11 +131,11 @@ public class Test {
 
         duration = Date.from(end).getTime() - Date.from(init).getTime();
 
-        message += line;
-        message += apresentationString.formatted(name);
-        message += durationString.formatted(duration);
-
         withError = testException != null;
+
+        passed = withError? false: expect == null? result == null: expect.equals(result);
+
+        message += testResult.formatted(passed ? "Passed": "Failed", name, duration);
 
         if (withError) {
             message += errorString.formatted(testException);
@@ -73,19 +143,11 @@ public class Test {
             for (StackTraceElement trace : testException.getStackTrace())
                 message += stackTraceString.formatted(trace.toString());
         }
-        
-        passed = withError? false: expect == null? result == null: expect.equals(result);
-
-        message += checkingString.formatted(passed);
-        message += line;
 
         System.out.print(message);
     }
 
-    private static final String line =                "------------------------------\n";
-    private static final String apresentationString = "> [Name]     : \"%s\"\n";
-    private static final String durationString =      "> [Duration] : %sms\n";
-    private static final String errorString =         "> [Error]    : %s\n";
-    private static final String stackTraceString =    "> > [Stack]  : %s\n";
-    private static final String checkingString =      "> [Passed]   : %s\n";
+    private static final String testResult =          "> [%s] -> \"%s\" finished in %sms\n";
+    private static final String errorString =         "> [Error]   %s\n";
+    private static final String stackTraceString =    "> |-[Stack] %s\n";
 }
