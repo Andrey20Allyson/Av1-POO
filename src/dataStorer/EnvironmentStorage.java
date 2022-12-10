@@ -105,7 +105,8 @@ public class EnvironmentStorage {
         }
     }
 
-    public String toTable() {
+    @Override
+    public String toString() {
         try {
             Field[] fields = EnvironmentRegistry.class.getDeclaredFields();
 

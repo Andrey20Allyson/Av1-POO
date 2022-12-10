@@ -29,7 +29,7 @@ public class Test {
         });
 
         test("get table", () -> {
-            System.out.println(storage.toTable());
+            System.out.println(storage.toString());
         });
     }
     
