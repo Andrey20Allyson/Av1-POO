@@ -10,6 +10,9 @@ public class EnvironmentStorage {
     private EnvironmentRegistry[] registres;
     private int length;
 
+    /**
+     * Uma classe que permite o amazenamento de EnvironmentRegistry de uma forma simples e prática.
+     */
     public EnvironmentStorage() {
         this.registres = new EnvironmentRegistry[EnvironmentStorage.MAX_NUM_OF_REGISTERS];
         this.length = 0;
