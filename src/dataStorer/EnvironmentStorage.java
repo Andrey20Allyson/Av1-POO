@@ -116,7 +116,6 @@ public class EnvironmentStorage {
             String[] fieldNames = new String[fields.length];
 
             int indexMaxLen = Integer.toString(this.length).length();
-            System.out.println(indexMaxLen);
             int[] maxLengths = new int[fields.length];
 
             for (int i = 0; i < fieldNames.length; i++)
