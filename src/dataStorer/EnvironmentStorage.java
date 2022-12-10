@@ -114,6 +114,7 @@ public class EnvironmentStorage {
             String indexText = "";
             String insert = " ] --> | ";
             String[] fieldNames = new String[fields.length];
+            String[][] valueTexts = new String[this.length][fields.length];
 
             int indexMaxLen = Integer.toString(this.length).length();
             int[] maxLengths = new int[fields.length];
@@ -127,12 +128,12 @@ public class EnvironmentStorage {
             for (int i = 0; i < maxLengths.length; i++) {
                 for (int j = 0; j < this.length; j++) {
                     Object value = fields[i].get(this.registres[j]);
-                    int len;
-                    if (value instanceof Float) {
-                        len = String.format("%.2f", value).length();
-                    } else {
-                        len = value.toString().length();
-                    }
+
+                    String valueText = value instanceof Float? String.format("%.2f", value): value.toString();
+
+                    int len = valueText.length();
+
+                    valueTexts[j][i] = valueText;
                     
                     if (maxLengths[i] < len)
                         maxLengths[i] = len;
@@ -155,14 +156,7 @@ public class EnvironmentStorage {
                 insert = " ] --> | ";
 
                 for (int j = 0; j < fields.length; j++) {
-                    Object value = fields[j].get(this.registres[i]);
-                    String text;
-
-                    if (value instanceof Float) {
-                        text = String.format("%.2f", value);
-                    } else {
-                        text = value.toString();
-                    }
+                    String text = valueTexts[i][j];
                     
                     insert += text + StringManipuler.repeat(" ", maxLengths[j] - text.length());
 
