@@ -15,10 +15,21 @@ public class EnvironmentStorage {
         this.length = 0;
     }
     
+    /**
+     * Remove o ultimo valor da lista de registros.
+     * 
+     * @return o valor removido.
+     */
     public EnvironmentRegistry pop() {
         return this.pop(-1);
     }
 
+    /**
+     * Remove o valor presente no indice, e diminui o tamanho da lista.
+     * 
+     * @param index - o índice cujo valor será removido.
+     * @return o valor removido.
+     */
     public EnvironmentRegistry pop(int index) {
         index = parseToIndex(index);
         if (index == -1)
@@ -36,6 +47,12 @@ public class EnvironmentStorage {
         return registry;
     }
 
+    /**
+     * Altera o valor da lista de registros presente no indice.
+     * 
+     * @param index - o índice onde o valor será alterado.
+     * @param value - o novo valor a ser inserido.
+     */
     public void set(int index, EnvironmentRegistry value) {
         index = parseToIndex(index);
         if (index == -1)
@@ -44,6 +61,12 @@ public class EnvironmentStorage {
         this.registres[index] = value;
     }
 
+    /**
+     * Retorna o registro que se localiza no índice informado. 
+     * 
+     * @param index - índice do registro, se for menor que 0 o índice percorre a lista de trás para frente.
+     * @return o registro localizado no índice.
+     */
     public EnvironmentRegistry get(int index) {
         index = this.parseToIndex(index);
         if (index == -1)
@@ -52,16 +75,37 @@ public class EnvironmentStorage {
         return this.registres[index];
     }
 
-    private int parseToIndex(int value) {
+    /**
+     * Transforma um inteiro de qualquer valor em um inteiro cuja variação é de [-1, N - 1], sendo N o tamanho da lista de registros.
+     * 
+     * @param value - valor inteiro a ser tranformado.
+     * @return um inteiro maior ou igual a -1, retorna -1 caso o valor passado não possa ser utilizado como índice.
+     */
+    protected int parseToIndex(int value) {
         int index = value < 0? this.length + value: value;
         return index > this.length - 1 || index < 0? -1: index; 
     }
 
+    /**
+     * Insere o registro passado na lista de registro e retorna o índice do mesmo.
+     * 
+     * @param registry - o registro a ser inserido.
+     * @return o índice do item inserido.
+     */
     public int push(EnvironmentRegistry registry) {
         this.registres[this.length] = registry;
         return this.length++;
     }
     
+    /**
+     * Instancia um novo registro com base nos argumentos passados, o armazena e retorna o seu índice logo após.
+     * 
+     * @param temperature - temperatura do ambiente.
+     * @param carbonOxideQnt - quantidade de gás carbonico.
+     * @param humidity - humidade.
+     * @param time - quando a coleta foi feita.
+     * @returns o índice do item inserido.
+     */
     public int push(float temperature, float carbonOxideQnt, float humidity, Date time) {
         return this.push(new EnvironmentRegistry(temperature, carbonOxideQnt, humidity, time));
     }
@@ -69,10 +113,10 @@ public class EnvironmentStorage {
     /**
      * Método fábrica que cria um novo registro, o armazena e o retorna logo após.
      * 
-     * @param temperature - temperatura do ambiente
-     * @param carbonDioxideQnt - quantidade de gás carbonico
-     * @param humidity - humidade
-     * @param time - quando a coleta foi feita
+     * @param temperature - temperatura do ambiente.
+     * @param carbonDioxideQnt - quantidade de gás carbonico.
+     * @param humidity - humidade.
+     * @param time - quando a coleta foi feita.
      * @return um novo registro.
      */
     public EnvironmentRegistry createRegisty(float temperature, float carbonDioxideQnt, float humidity, Date time) {
