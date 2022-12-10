@@ -66,26 +66,49 @@ public class EnvironmentStorage {
         this.push(new EnvironmentRegistry(temperature, carbonOxideQnt, humidity, time));
     }
 
-    public EnvironmentRegistry createRegisty(float temperature, float carbonOxideQnt, float humidity, Date time) {
-        EnvironmentRegistry registry = new EnvironmentRegistry(temperature, carbonOxideQnt, humidity, time);
+    /**
+     * Método fábrica que cria um novo registro, o armazena e o retorna logo após.
+     * 
+     * @param temperature - temperatura do ambiente
+     * @param carbonDioxideQnt - quantidade de gás carbonico
+     * @param humidity - humidade
+     * @param time - quando a coleta foi feita
+     * @return um novo registro.
+     */
+    public EnvironmentRegistry createRegisty(float temperature, float carbonDioxideQnt, float humidity, Date time) {
+        EnvironmentRegistry registry = new EnvironmentRegistry(temperature, carbonDioxideQnt, humidity, time);
 
         this.push(registry);
 
         return registry;
     }
 
+    /**
+     * Ordena a lista de registros de forma crescente de acordo com a propriedade <strong>carbonDioxideQnt</strong> do registro.
+     */
     public void sortByCarbonDioxideQnt() {
         this.bubbleSort((leftValue, rightValue) -> leftValue.carbonDioxideQnt > rightValue.carbonDioxideQnt);
     }
 
+    /**
+     * Ordena a lista de registros de forma crescente de acordo com a propriedade <strong>temperature</strong> do registro.
+     */
     public void sortByTemperature() {
         this.bubbleSort((leftValue, rightValue) -> leftValue.temperature > rightValue.temperature);
     }
 
+    /**
+     * Ordena a lista de registros de forma decrescente de acordo com a propriedade <strong>humidity</strong> do registro.
+     */
     public void sortByHumidity() {
         this.bubbleSort((leftValue, rightValue) -> leftValue.humidity < rightValue.humidity);
     }
 
+    /**
+     * Ordena a lista de registros de acordo com o retorno do callback utilizando o algoritmo Bubble Sort.
+     * 
+     * @param callback
+     */
     public void bubbleSort(SortCallback<EnvironmentRegistry> callback) {
         boolean isSorted;
 
