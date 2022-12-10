@@ -57,13 +57,13 @@ public class EnvironmentStorage {
         return index > this.length - 1 || index < 0? -1: index; 
     }
 
-    public void push(EnvironmentRegistry registry) {
+    public int push(EnvironmentRegistry registry) {
         this.registres[this.length] = registry;
-        this.length++;
+        return this.length++;
     }
     
-    public void push(float temperature, float carbonOxideQnt, float humidity, Date time) {
-        this.push(new EnvironmentRegistry(temperature, carbonOxideQnt, humidity, time));
+    public int push(float temperature, float carbonOxideQnt, float humidity, Date time) {
+        return this.push(new EnvironmentRegistry(temperature, carbonOxideQnt, humidity, time));
     }
 
     /**
