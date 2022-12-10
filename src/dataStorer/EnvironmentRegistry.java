@@ -8,9 +8,9 @@ public class EnvironmentRegistry {
     public float humidity;
     public Date time;
 
-    public EnvironmentRegistry(float temperature, float carbonOxideQnt, float humidity, Date time) {
+    public EnvironmentRegistry(float temperature, float carbonDioxideQnt, float humidity, Date time) {
         this.temperature = temperature;
-        this.carbonDioxideQnt = carbonOxideQnt;
+        this.carbonDioxideQnt = carbonDioxideQnt;
         this.humidity = humidity;
         this.time = time;
     }
