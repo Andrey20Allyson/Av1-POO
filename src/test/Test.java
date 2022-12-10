@@ -10,9 +10,7 @@ public class Test {
     public static void main(String[] args) {
         EnvironmentStorage storage = new EnvironmentStorage();
 
-        test("data creation", null, () -> {
-
-            
+        test("data creation", () ->  {
             for (int i = 0; i < 48; i++) {
                 var temp = Math.random() * 100000;
                 var carb = Math.random() * 10000;
@@ -20,32 +18,74 @@ public class Test {
 
                 storage.createRegisty((float) temp, (float) carb, (float) humi, Calendar.getInstance().getTime());
             }
-
-            return null;
         });
 
-        test("sort by temperature", null, () -> {
+        test("sort by temperature", () -> {
             storage.sortByTemperature();
-            
-            return null;
         });
 
-        test("get table", null, () -> {
+        test("sort by carbon dioxide", () -> {
+            storage.sortByCarbonDioxideQnt();
+        });
+
+        test("get table", () -> {
             System.out.println(storage.toTable());
-
+        });
+    }
+    
+    public static void test(String name, VoidReturnTestCallback testCallback) {
+        test(name, null, () -> {
+            testCallback.call();
             return null;
         });
     }
 
-    public static void test(String name, Object expect, TestCallback testCallback) {
-        var init = Instant.now();
+    public static <T> void test(String name, T expect, TestCallback<T> testCallback) {
+        boolean withError, passed;
+        long duration;
+        Instant init, end;
 
-        var result = testCallback.call();
+        T result = null;
+        Exception testException = null;
+        String message = "";
 
-        var end = Instant.now();
-        System.out.println("\"%s\" has finished in: %sms".formatted(name, Date.from(end).getTime() - Date.from(init).getTime()));
-        if (expect != null) {
-            System.out.println("passed = %s".formatted(expect.equals(result)));
+        init = Instant.now();
+
+        try {
+            result = testCallback.call();
+        } catch (Exception exception) {
+            testException = exception;
         }
+
+        end = Instant.now();
+
+        duration = Date.from(end).getTime() - Date.from(init).getTime();
+
+        message += line;
+        message += apresentationString.formatted(name);
+        message += durationString.formatted(duration);
+
+        withError = testException != null;
+
+        if (withError) {
+            message += errorString.formatted(testException);
+
+            for (StackTraceElement trace : testException.getStackTrace())
+                message += stackTraceString.formatted(trace.toString());
+        }
+        
+        passed = withError? false: expect == null? result == null: expect.equals(result);
+
+        message += checkingString.formatted(passed);
+        message += line;
+
+        System.out.print(message);
     }
+
+    private static final String line =                "------------------------------\n";
+    private static final String apresentationString = "> [Name]     : \"%s\"\n";
+    private static final String durationString =      "> [Duration] : %sms\n";
+    private static final String errorString =         "> [Error]    : %s\n";
+    private static final String stackTraceString =    "> > [Stack]  : %s\n";
+    private static final String checkingString =      "> [Passed]   : %s\n";
 }

@@ -1,5 +1,5 @@
 package test;
 
-public interface TestCallback {
-    public Object call();
+public interface TestCallback<T> {
+    public T call();
 }
