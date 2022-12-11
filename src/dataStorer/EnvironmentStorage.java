@@ -1,20 +1,21 @@
 package dataStorer;
 
 import java.lang.reflect.Field;
+import java.security.InvalidParameterException;
 import java.util.Date;
 
 import string.manipuler.StringManipuler;
 
 public class EnvironmentStorage {
     public static final int MAX_NUM_OF_REGISTERS = 48;
-    private EnvironmentRegistry[] registres;
+    private EnvironmentRegistry[] registers;
     private int length;
 
     /**
      * Uma classe que permite o amazenamento de EnvironmentRegistry de uma forma simples e prática.
      */
     public EnvironmentStorage() {
-        this.registres = new EnvironmentRegistry[EnvironmentStorage.MAX_NUM_OF_REGISTERS];
+        this.registers = new EnvironmentRegistry[EnvironmentStorage.MAX_NUM_OF_REGISTERS];
         this.length = 0;
     }
     
@@ -38,13 +39,13 @@ public class EnvironmentStorage {
         if (index == -1)
             return null;
 
-        EnvironmentRegistry registry = this.registres[index];
+        EnvironmentRegistry registry = this.registers[index];
 
-        this.registres[index] = null;
+        this.registers[index] = null;
         --this.length;
 
         for (int i = index; i < this.length; i++) {
-            this.registres[i] = this.registres[i + 1]; 
+            this.registers[i] = this.registers[i + 1]; 
         }
 
         return registry;
@@ -61,7 +62,7 @@ public class EnvironmentStorage {
         if (index == -1)
             return;
 
-        this.registres[index] = value;
+        this.registers[index] = value;
     }
 
     /**
@@ -75,7 +76,7 @@ public class EnvironmentStorage {
         if (index == -1)
             return null;
 
-        return this.registres[index];
+        return this.registers[index];
     }
 
     /**
@@ -96,7 +97,7 @@ public class EnvironmentStorage {
      * @return o índice do item inserido.
      */
     public int push(EnvironmentRegistry registry) {
-        this.registres[this.length] = registry;
+        this.registers[this.length] = registry;
         return this.length++;
     }
     
@@ -162,12 +163,12 @@ public class EnvironmentStorage {
         for (int i = this.length - 1; i > 0; i--) {
             isSorted = true;
             for (int j = 0; j < i; j++) {
-                var leftVal = this.registres[j];
-                var rightVal = this.registres[j + 1];
+                var leftVal = this.registers[j];
+                var rightVal = this.registers[j + 1];
 
                 if (callback.call(leftVal, rightVal)) {
-                    this.registres[j] = rightVal;
-                    this.registres[j + 1] = leftVal;
+                    this.registers[j] = rightVal;
+                    this.registers[j + 1] = leftVal;
                     isSorted = false;
                 }
             }
@@ -175,19 +176,107 @@ public class EnvironmentStorage {
         }
     }
 
-    @Override
+    /**
+     * Retorna uma String em formato de tabela que facilite a vizualização dos dados.
+     * 
+     * @return uma String formatada.
+     */
     public String toString() {
+        String[] allowed = {};
+
+        return this.toString(0, -1, allowed);
+    }
+
+    /**
+     * Retorna uma String em formato de tabela que vai do índice start até o fim da lista de registros.
+     * 
+     * @param start - inicio da tabela.
+     * @return uma String formatada.
+     */
+    public String toString(int start) {
+        String[] allowed = {};
+
+        return this.toString(start, -1, allowed);
+    }
+
+    /**
+     * Retorna uma String em formato de tabela que vai do índice start até o índice end.
+     * 
+     * @param start - inicio da tabela.
+     * @param end - fim da tabela.
+     * @return uma String formatada.
+     */
+    public String toString(int start, int end) {
+        String[] allowed = {};
+
+        return this.toString(start, end, allowed);
+    }
+
+    /**
+     * Retorna uma String em formato de tabela que vai do índice start até o fim da lista de registros, podendo ser passado os campos permitidos.
+     * 
+     * @param start - inicio da tabela.
+     * @param allowedFields - campos permitidos.
+     * @return
+     */
+    public String toString(int start, String ...allowedFields) {
+        return this.toString(start, -1, allowedFields);
+    }
+
+    /**
+     * Retorna uma String em formato de tabela que vai do índice start até o índice end, podendo ser passado os campos permitidos.
+     * 
+     * @param start - inicio da tabela.
+     * @param end - fim da tabela.
+     * @param allowedFields - campos permitidos.
+     * @return uma String formatada.
+     */
+    public String toString(int start, int end, String ...allowedFields) {
         try {
-            Field[] fields = EnvironmentRegistry.class.getDeclaredFields();
+            start = this.parseToIndex(start);
+            end = this.parseToIndex(end) + 1;
+            if (start == -1)
+                throw new IndexOutOfBoundsException("Start is out of bounds");
+
+            if (end == 0)
+                throw new IndexOutOfBoundsException("End is out of bounds");
+
+            if (start > end)
+                throw new InvalidParameterException("Start can't be bigger than end");
+
+            Field[] rawFields;
 
             String result = "";
             String base = "[ index: %s%s\n";
             String indexText = "";
             String insert = " ] --> | ";
-            String[] fieldNames = new String[fields.length];
-            String[][] valueTexts = new String[this.length][fields.length];
 
-            int indexMaxLen = Integer.toString(this.length).length();
+            int trueNumOfFields = 0;
+
+            if (allowedFields.length == 0) {
+                rawFields = EnvironmentRegistry.class.getFields();
+            } else {
+                rawFields = new Field[allowedFields.length];
+
+                for (int i = 0; i < allowedFields.length; i++) {
+                    try {
+                        rawFields[trueNumOfFields] = EnvironmentRegistry.class.getField(allowedFields[i]);
+                        trueNumOfFields++;
+                    } catch (Exception e) {
+                        System.out.println("The field %s dont exists".formatted(allowedFields[i]));
+                    }
+                }
+            }
+
+            Field[] fields = new Field[trueNumOfFields];
+
+            for (int i = 0; i < trueNumOfFields; i++)
+                fields[i] = rawFields[i];
+            
+            String[] fieldNames = new String[fields.length];
+            String[][] valueTexts = new String[end - start][fields.length];
+
+            int indexMaxLen = Integer.toString(end - 1).length();
             int[] maxLengths = new int[fields.length];
 
             for (int i = 0; i < fieldNames.length; i++)
@@ -197,8 +286,8 @@ public class EnvironmentStorage {
                 maxLengths[i] = fieldNames[i].length();
 
             for (int i = 0; i < maxLengths.length; i++) {
-                for (int j = 0; j < this.length; j++) {
-                    Object value = fields[i].get(this.registres[j]);
+                for (int j = 0; j < valueTexts.length; j++) {
+                    Object value = fields[i].get(this.registers[j + start]);
 
                     String valueText = value instanceof Float? String.format("%.2f", value): value.toString();
 
@@ -223,7 +312,7 @@ public class EnvironmentStorage {
 
             result += base.formatted(indexText, insert);
 
-            for (int i = 0; i < this.length; i++) {
+            for (int i = 0; i < valueTexts.length; i++) {
                 insert = " ] --> | ";
 
                 for (int j = 0; j < fields.length; j++) {
@@ -231,7 +320,7 @@ public class EnvironmentStorage {
                     
                     insert += text + StringManipuler.repeat(" ", maxLengths[j] - text.length());
 
-                    indexText = Integer.toString(i); 
+                    indexText = Integer.toString(i + start); 
                     indexText += StringManipuler.repeat(" ", indexMaxLen - indexText.length());
 
                     insert += " | ";
