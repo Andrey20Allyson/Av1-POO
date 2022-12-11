@@ -6,7 +6,7 @@ Matricula: 01525971
 
 - [Introdução.](#introdução)
 - [Como funciona?](#como-funciona)
-- - [Campos da instancia de EnvironmentRegistry.](#campos-da-instancia-de-environmentregistry)
+    - [Campos da instancia de EnvironmentRegistry.](#campos-da-instancia-de-environmentregistry)
 - [Como rodar na mina maquina?](#como-rodar-na-mina-maquina)
 
 ## Introdução.
@@ -148,6 +148,6 @@ Realiza o processo de build e executa a classe Main logo após.
 
 Fazendo isso, deve aparecer algo parecido com isso: 
 
-<img src="images/toString-ilustration.png" />
+<img src="images/main-output-ilustration.png" />
 
 Pronto agora você poderá realizar os testes e implementar o que quiser.
