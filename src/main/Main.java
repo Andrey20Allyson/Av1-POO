@@ -6,6 +6,7 @@ import dataStorer.EnvironmentStorage;
 
 public class Main {
     public static void main(String[] args) {
+        // Isso é apenas um código base.
         EnvironmentStorage storage = new EnvironmentStorage();
 
         for (int i = 0; i < 12; i++) {
