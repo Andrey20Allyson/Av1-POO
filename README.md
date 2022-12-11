@@ -7,7 +7,17 @@ Matricula: 01525971
 - [Introdução.](#introdução)
 - [Como funciona?](#como-funciona)
     - [Campos da instancia de EnvironmentRegistry.](#campos-da-instancia-de-environmentregistry)
+    - [Metodos da classe EnvironmentStorage.](#metodos-da-classe-environmentstorage)
+        - [Criação](#criação)
+        - [Manipulação](#manipulação)
+        - [Obtenção](#obtenção)
+        - [Inserção](#inserção)
+        - [Remoção](#remoção)
+        - [Ordenação](#ordenação)
+        - [Exibição](#exibição)
 - [Como rodar na mina maquina?](#como-rodar-na-mina-maquina)
+    - [Requerimentos.](#requerimentos)
+    - [Primeiros passos no windons.](#primeiros-passos-no-windons)
 
 ## Introdução.
 
@@ -93,7 +103,7 @@ O foco do programa está nessa classe que fornece a [__criação__](#criação),
 
 - #### Exibição.
 
-    - `String toString();`
+    - `String toString(...);`
 
         Cria uma String formatada para uma vizualização no cmd, powerShell, bash e etc.
 
