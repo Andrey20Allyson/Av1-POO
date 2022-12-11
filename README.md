@@ -71,15 +71,15 @@ O foco do programa está nessa classe que fornece a [__criação__](#criação),
 
     - `void sortByCarbonDioxideQnt();`
 
-        Ordena de forma crescente os registros de a cordo com o valor contido no campo __carbonDioxideQnt__.
+        Ordena de forma crescente os registros de acordo com o valor contido no campo __carbonDioxideQnt__.
 
     - `void sortByTemperature();`
 
-        Ordena de forma crescente os registros de a cordo com o valor contido no campo __temperature__.
+        Ordena de forma crescente os registros de acordo com o valor contido no campo __temperature__.
 
     - `void sortByHumidity();`
 
-        Ordena de forma decrescente os registros de a cordo com o valor contido no campo __humidity__.
+        Ordena de forma decrescente os registros de acordo com o valor contido no campo __humidity__.
 
     - `void bubbleSort(SortCallback<EnvironmentRegistry> callback);`
 
