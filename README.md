@@ -119,7 +119,7 @@ Aqui está um passo a passo para a execução correta do programa.
 
 Para testar e executar o codigo será necessário cumprir com os seguintes requisitos:
 
-- Ter o `jre` e o `jdk` instalados na sua maquina.
+- Ter o `jdk 19.0.1` instalado na sua maquina.
 
     Eles permitirão o build e a execução do programa.
 
@@ -133,7 +133,9 @@ Para testar e executar o codigo será necessário cumprir com os seguintes requi
 
     Eu estou trabalhando para que __Linux__ e __macOS__ tambem possam executa-lo.
 
-___Atentão___: O `javapath` precisa estar exposto na variável de sistema `Path`.
+___Atentão___: 
+- O `javapath` precisa estar exposto na variável de sistema `Path`.
+- O jdk deve ser da versão 19.0.1 ou superior.
 
 ### Primeiros passos no Windons
 
